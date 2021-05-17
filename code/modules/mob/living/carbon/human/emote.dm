@@ -1,7 +1,8 @@
 /mob/living/carbon/human/emote(var/act,var/m_type=1,var/message = null)
 	var/param = null
 	var/datum/gender/T = gender_datums[get_visible_gender()]
-
+	if(istype(src, /mob/living/carbon/human/dummy))
+		return
 	if (findtext(act, "-", 1, null))
 		var/t1 = findtext(act, "-", 1, null)
 		param = copytext(act, t1 + 1, length(act) + 1)
@@ -964,7 +965,14 @@
 			message = "purrs softly."
 			m_type = 2
 			playsound(loc, 'modular_citadel/sound/voice/purr.ogg', 50, 1, -1)
-
+		if ("clak")
+			if(!spam_flag)
+				var/msg = list("<font color='grey' size='2'>CLAKS!</font>", "claks!")
+				message = "[pick(msg)]"
+				playsound(loc, 'modular_citadel/sound/spooky/boneclak.ogg', 50, 1, 1)
+				spam_flag = TRUE
+				addtimer(CALLBACK(src, .proc/spam_flag_false), 18)
+			m_type = 2
 	if (message)
 		custom_emote(m_type,message)
 		return 1
